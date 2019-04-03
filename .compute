@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -xe
+
+#apt-get install -y python3-venv
+#python3 -m venv /tmp/venv
+#source /tmp/venv/bin/activate
+
+#pip install -r <(grep -v tensorflow requirements.txt)
+#pip install tensorflow-gpu==1.13.0-rc2
+
+# Install ds_ctcdecoder package from TaskCluster
+#pip install $(python3 util/taskcluster.py --decoder)
+
+mkdir -p content/keep/summaries
+
+
+python -u /content/DeepSpeech/DeepSpeech.py \
+  --train_files "/content/ky/clips/train.csv" \
+  --dev_files "/content/ky/clips/dev.csv"\
+  --test_files "/content/ky/clips/test.csv" \
+  --train_batch_size 24 \
+  --dev_batch_size 48 \
+  --test_batch_size 48 \
+  --n_hidden 2048 \
+  --learning_rate 0.0001 \
+  --dropout_rate 0.2 \
+  --epoch 13 \
+  --display_step 0 \
+  --validation_step 1 \
+  --checkpoint_dir "content//keep" \
+  --summary_dir "content/keep/summaries"\
+  --alphabet_config_path "/content/DeepSpeech/data/alphabet.txt"\
+  --lm_binary_path "/content/DeepSpeech/data/lm/lm.binary"\
+  --lm_trie_path "/content/DeepSpeech/data/lm/trie"\
+  --export_dir "content/keep/model"
